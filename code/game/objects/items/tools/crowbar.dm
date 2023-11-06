@@ -9,7 +9,7 @@
 	usesound = 'sound/items/crowbar.ogg'
 	flags_1 = CONDUCT_1
 	slot_flags = ITEM_SLOT_BELT
-	force = 5
+	force = 30
 	throwforce = 7
 	demolition_mod = 1.25
 	w_class = WEIGHT_CLASS_SMALL
