@@ -341,6 +341,7 @@
 
 /datum/brain_trauma/severe/stroke/on_gain()
 	ADD_TRAIT(owner, TRAIT_STROKE, TRAUMA_TRAIT)
+	brain.flash_stroke_screen(owner)
 	return ..()
 
 /datum/brain_trauma/severe/stroke/on_lose()
@@ -390,6 +391,7 @@
 			if(11)
 				if(HAS_TRAIT(owner, TRAIT_NOBREATH))
 					return
+				owner.losebreath += 4
 				owner.adjustOxyLoss(rand(20, 30))
 				INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob,emote), "gasp")
 				to_chat(owner, span_warning("You struggle to breathe!"))

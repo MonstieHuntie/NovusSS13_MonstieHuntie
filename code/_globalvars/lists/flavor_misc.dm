@@ -37,8 +37,10 @@ GLOBAL_LIST_EMPTY(tails_list)
 GLOBAL_LIST_EMPTY(tails_list_monkey)
 GLOBAL_LIST_EMPTY(tails_list_human)
 GLOBAL_LIST_EMPTY(tails_list_lizard)
+GLOBAL_LIST_EMPTY(tails_list_avali)
 GLOBAL_LIST_EMPTY(ears_list)
 GLOBAL_LIST_EMPTY(ears_list_human)
+GLOBAL_LIST_EMPTY(ears_list_avali)
 GLOBAL_LIST_EMPTY(wings_list)
 GLOBAL_LIST_EMPTY(wings_open_list)
 GLOBAL_LIST_EMPTY(moth_wings_list)
@@ -420,6 +422,9 @@ GLOBAL_LIST_INIT(admiral_messages, list(
 ))
 
 GLOBAL_LIST_INIT(junkmail_messages, world.file2list("strings/junkmail.txt"))
+
+// Messages displayed when very specific brain injuries occur
+GLOBAL_LIST_INIT(brain_injury_messages, world.file2list("strings/brain_injury.txt"))
 
 // All valid inputs to status display post_status
 GLOBAL_LIST_INIT(status_display_approved_pictures, list(

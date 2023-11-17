@@ -33,6 +33,8 @@
 	var/datum/worn_feature_offset/worn_suit_offset
 	/// Offset to apply to equipment worn on the neck
 	var/datum/worn_feature_offset/worn_neck_offset
+	/// Offset to apply to accessories
+	var/datum/worn_feature_offset/worn_accessory_offset
 
 /obj/item/bodypart/chest/Destroy()
 	QDEL_NULL(cavity_item)
@@ -43,11 +45,18 @@
 	QDEL_NULL(worn_back_offset)
 	QDEL_NULL(worn_suit_offset)
 	QDEL_NULL(worn_neck_offset)
+	QDEL_NULL(worn_accessory_offset)
 	return ..()
 
 //chests are special snowflakes because instakills aren't fun
 /obj/item/bodypart/chest/can_dismember(damage_source)
 	if(owner.stat < HARD_CRIT || !LAZYLEN(organs))
+		return FALSE
+	return ..()
+
+/obj/item/bodypart/chest/drop_limb(special, dismembered)
+	//if this is not a special drop, this is a mistake
+	if(!special)
 		return FALSE
 	return ..()
 

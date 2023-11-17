@@ -22,6 +22,11 @@
 	is_dimorphic = FALSE
 	dmg_overlay_type = null
 	brute_modifier = 1.25 //ethereal are weak to brute damages
+	bodypart_traits = list(
+		TRAIT_NO_UNDERWEAR,
+		TRAIT_NO_UNDERSHIRT,
+		TRAIT_NO_SOCKS,
+	)
 
 /obj/item/bodypart/chest/ethereal/update_limb(dropping_limb, is_creating)
 	. = ..()
@@ -97,6 +102,6 @@
 		species_color = eth_holder.current_color
 
 /obj/item/bodypart/head/ethereal/lustrous
-	icon_state = "lustrous_head"
 	limb_id = SPECIES_ETHEREAL_LUSTROUS
+	bodypart_traits = list(TRAIT_BIG_SKULL)
 	head_flags = NONE

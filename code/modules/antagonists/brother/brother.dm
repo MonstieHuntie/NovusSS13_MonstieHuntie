@@ -48,6 +48,7 @@
 		RegisterSignal(living_mob, COMSIG_CARBON_GAIN_TRAUMA, PROC_REF(on_gain_trauma))
 		RegisterSignal(living_mob, COMSIG_CARBON_LOSE_TRAUMA, PROC_REF(on_lose_trauma))
 		RegisterSignal(living_mob, COMSIG_CARBON_PRINT_MOOD, PROC_REF(on_print_mood))
+	ADD_TRAIT(owner, TRAIT_SPECIAL_TRAUMA_BOOST, BROTHER_TRAIT)
 
 /datum/antagonist/brother/remove_innate_effects(mob/living/mob_override)
 	var/mob/living/living_mob = mob_override || owner.current
@@ -63,6 +64,7 @@
 	UnregisterSignal(living_mob, list(COMSIG_LIVING_DEATH, COMSIG_LIVING_REVIVE))
 	if(iscarbon(living_mob))
 		UnregisterSignal(living_mob, list(COMSIG_CARBON_CHECK_SELF_FOR_INJURIES, COMSIG_CARBON_GAIN_TRAUMA, COMSIG_CARBON_LOSE_TRAUMA, COMSIG_CARBON_PRINT_MOOD))
+	REMOVE_TRAIT(owner, TRAIT_SPECIAL_TRAUMA_BOOST, BROTHER_TRAIT)
 
 /datum/antagonist/brother/on_removal()
 	owner.special_role = null
@@ -125,7 +127,6 @@
 
 /datum/antagonist/brother/proc/finalize_brother()
 	update_name()
-	team.update_name()
 	suicide_cry = "FOR MY [uppertext(team.hood_type)]!"
 	owner.current.playsound_local(get_turf(owner.current), 'sound/ambience/antag/brotheralert.ogg', 100, FALSE, pressure_affected = FALSE, use_reverb = FALSE)
 
@@ -283,6 +284,18 @@
 	/// Brotherhood, sisterhood or siblinghood
 	var/hood_type
 
+/datum/team/brother_team/add_member(datum/mind/new_member)
+	. = ..()
+	update_name()
+
+/datum/team/brother_team/remove_member(datum/mind/member)
+	. = ..()
+	for(var/datum/mind/brother_mind as anything in (members - member))
+		if(!brother_mind.current)
+			continue
+		to_chat(brother_mind.current, span_userdanger("No... [member.name] is no longer part of the [uppertext(hood_type)]!"))
+	update_name()
+
 /datum/team/brother_team/proc/update_name()
 	var/list/gendercount = list(MALE = 0, FEMALE = 0, PLURAL = 0)
 	var/list/last_names = list()
@@ -324,10 +337,10 @@
 	if(prob(50))
 		if(LAZYLEN(active_ais()) && prob(100/GLOB.joined_player_list.len))
 			add_objective(new /datum/objective/destroy, needs_target = TRUE)
-		else if(prob(30))
-			add_objective(new /datum/objective/maroon, needs_target = TRUE)
 		else if(prob(20)) //small chance to debrain due to new brother lore
 			add_objective(new /datum/objective/debrain, needs_target = TRUE)
+		else if(prob(50))
+			add_objective(new /datum/objective/maroon, needs_target = TRUE)
 		else
 			add_objective(new /datum/objective/assassinate, needs_target = TRUE)
 	else

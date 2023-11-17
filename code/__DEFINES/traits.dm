@@ -186,6 +186,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_DEATHCOMA "deathcoma"
 /// Makes the owner appear as dead to most forms of medical examination
 #define TRAIT_FAKEDEATH "fakedeath"
+/// Owner will appear as "Unknown"
 #define TRAIT_DISFIGURED "disfigured"
 /// Tracks whether we're gonna be a baby alien's mummy.
 #define TRAIT_XENO_HOST "xeno_host"
@@ -204,9 +205,13 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_AIRLOCK_SHOCKIMMUNE "airlock_shock_immunity"
 /// Is this atom being actively shocked? Used to prevent repeated shocks.
 #define TRAIT_BEING_SHOCKED "shocked"
+/// You need blood, you don't need a heart to pump it
+#define TRAIT_HEARTLESS_PUMPING "heartless_pumping"
+/// Your heart can't fail, but you still need one
 #define TRAIT_STABLEHEART "stable_heart"
 /// Prevents you from leaving your corpse
 #define TRAIT_CORPSELOCKED "corpselocked"
+/// Your liver can't fail, but you still need one
 #define TRAIT_STABLELIVER "stable_liver"
 #define TRAIT_VATGROWN "vatgrown"
 #define TRAIT_RESISTHEAT "resist_heat"
@@ -239,8 +244,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_AGENDER "agender"
 /// Species with this trait have a blood clan mechanic
 #define TRAIT_BLOOD_CLANS "blood_clans"
-/// Species with this trait have markings (this SUCKS, remove this later in favor of bodypart overlays)
-#define TRAIT_HAS_MARKINGS "has_markings"
 /// Species with this trait use skin tones for coloration
 #define TRAIT_USES_SKINTONES "uses_skintones"
 /// Species with this trait use mutant colors for coloration
@@ -280,7 +283,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Mob is immune to oxygen damage, does not need to breathe
 #define TRAIT_NOBREATH "no_breath"
 /// One can breath under water, you get me?
-#define TRAIT_WATER_BREATHING "water_breathing"
+#define TRAIT_UNDERWATER_BREATHING "underwater_breathing"
 /// Use when you want a mob to be able to metabolize plasma temporarily (e.g. plasma fixation disease symptom)
 #define TRAIT_PLASMA_LOVER_METABOLISM "plasma_lover_metabolism"
 #define TRAIT_EASYDISMEMBER "easy_dismember"
@@ -401,6 +404,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_GUNFLIP "gunflip"
 /// Increases chance of getting special traumas, makes them harder to cure
 #define TRAIT_SPECIAL_TRAUMA_BOOST "special_trauma_boost"
+/// Capable of handling having a psyker brain
+#define TRAIT_BIG_SKULL "big_skull"
 #define TRAIT_SPACEWALK "spacewalk"
 /// Sanity trait to keep track of when we're in hyperspace and add the appropriate element if we werent
 #define TRAIT_HYPERSPACED "hyperspaced"
@@ -498,6 +503,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Trait which prevents you from becoming overweight
 #define TRAIT_NOFAT "cant_get_fat"
 
+/// Trait which allows you to eat clothing
+#define TRAIT_CLOTHING_EATER "clothing_eater"
 /// Trait which allows you to eat rocks
 #define TRAIT_ROCK_EATER "rock_eater"
 /// Trait which allows you to gain bonuses from consuming rocks
@@ -570,7 +577,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_MAINTENANCE_METABOLISM "maintenance_metabolism"
 #define TRAIT_CORONER_METABOLISM "coroner_metabolism"
 
-//LUNG TRAITS
+// LUNG TRAITS
 /// Lungs always breathe normally when in vacuum/space.
 #define TRAIT_SPACEBREATHING "spacebreathing"
 
@@ -599,7 +606,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_KNOW_ENGI_WIRES "know_engi_wires"
 #define TRAIT_ENTRAILS_READER "entrails_reader"
 #define TRAIT_SABRAGE_PRO "sabrage_pro"
-/// this skillchip trait lets you wash brains in washing machines to heal them
+/// This skillchip trait lets you wash brains in washing machines to heal them
 #define TRAIT_BRAINWASHING "brainwashing"
 /// Allows chef's to chefs kiss their food, to make them with love
 #define TRAIT_CHEF_KISS "chefs_kiss"
@@ -747,7 +754,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_LIGHT_DRINKER "light_drinker"
 #define TRAIT_EMPATH "empath"
 #define TRAIT_FRIENDLY "friendly"
-#define TRAIT_GRABWEAKNESS "grab_weakness"
+#define TRAIT_CONSCIOUS_GRAB "conscious_grab"
+#define TRAIT_EASILY_GRABBED "easily_grabbed"
 #define TRAIT_SNOB "snob"
 #define TRAIT_BALD "bald"
 #define TRAIT_SHAVED "shaved"
@@ -872,6 +880,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define ADMIN_TRAIT "admin"
 /// Any traits given through a smite.
 #define SMITE_TRAIT "smite"
+#define BROTHER_TRAIT "brother"
 #define CHANGELING_TRAIT "changeling"
 #define CULT_TRAIT "cult"
 #define LICH_TRAIT "lich"

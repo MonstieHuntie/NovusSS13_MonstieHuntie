@@ -16,12 +16,14 @@
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/human, GLOB.tails_list_human, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/monkey, GLOB.tails_list_monkey, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/lizard, GLOB.tails_list_lizard, add_blank = TRUE)
+	init_sprite_accessory_subtypes(/datum/sprite_accessory/tails/avali, GLOB.tails_list_avali)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/snouts, GLOB.snouts_list, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/snouts/lizard, GLOB.snouts_list_lizard, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/horns, GLOB.horns_list, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/horns/lizard, GLOB.horns_list_lizard, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/ears, GLOB.ears_list, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/ears/human, GLOB.ears_list_human, add_blank = TRUE)
+	init_sprite_accessory_subtypes(/datum/sprite_accessory/ears/avali, GLOB.ears_list_avali)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/frills, GLOB.frills_list, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/frills/lizard, GLOB.frills_list_lizard, add_blank = TRUE)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/spines, GLOB.spines_list, add_blank = TRUE)
@@ -63,8 +65,8 @@
 /// Inits GLOB.species_list. Not using GLOBAL_LIST_INIT b/c it depends on GLOB.string_lists
 /proc/init_species_list()
 	for(var/species_path in subtypesof(/datum/species))
-		var/datum/species/species = new species_path()
-		GLOB.species_list[species.id] = species_path
+		var/datum/species/species = species_path
+		GLOB.species_list[initial(species.id)] = species_path
 	GLOB.species_list = sort_list(GLOB.species_list, GLOBAL_PROC_REF(cmp_typepaths_asc))
 
 /// Inits GLOB.surgeries
@@ -89,11 +91,10 @@
 	// I tried to eliminate this proc but I couldn't untangle their init-order interdependencies -Dominion/Cyberboss
 	init_sprite_accessories()
 	init_hair_gradients()
-	init_bodyparts_lists()
 	init_species_list()
 	init_voice_packs()
 	init_keybindings()
-	GLOB.emote_list = init_emote_list() // WHY DOES THIS NEED TO GO HERE? IT JUST INITS DATUMS
+	init_emote_list() // WHY DOES THIS NEED TO GO HERE? IT JUST INITS DATUMS
 	init_interactions()
 	init_crafting_recipes()
 	init_crafting_recipes_atoms()
@@ -112,7 +113,7 @@
 			else
 				GLOB.crafting_recipes += recipe
 
-	var/list/global_stack_recipes = list(
+	var/static/list/global_stack_recipes = list(
 		/obj/item/stack/sheet/glass = GLOB.glass_recipes,
 		/obj/item/stack/sheet/plasmaglass = GLOB.pglass_recipes,
 		/obj/item/stack/sheet/rglass = GLOB.reinforced_glass_recipes,

@@ -1,3 +1,5 @@
+#define NO_GRAVITY_CONSERVATION_OF_MOMENTUM 0.9
+
 /**
  * MOVABLE PHYSICS COMPONENT - By ma44, bob joga and pyroshark (https://github.com/DaedalusDock/daedalusdock/pull/96/)
  *
@@ -133,6 +135,7 @@
 	cached_transform = null
 
 /datum/component/movable_physics/RegisterWithParent()
+	RegisterSignal(parent, COMSIG_MOVABLE_NEWTONIAN_MOVE, .proc/on_newtonian_move)
 	RegisterSignal(parent, COMSIG_MOVABLE_BUMP, .proc/on_bump)
 	if(isitem(parent))
 		RegisterSignal(parent, COMSIG_ITEM_PICKUP, .proc/on_item_pickup)
@@ -142,6 +145,7 @@
 		qdel(src)
 
 /datum/component/movable_physics/UnregisterFromParent()
+	UnregisterSignal(parent, COMSIG_MOVABLE_NEWTONIAN_MOVE)
 	UnregisterSignal(parent, COMSIG_MOVABLE_IMPACT)
 	if(isitem(parent))
 		UnregisterSignal(parent, COMSIG_ITEM_PICKUP)
@@ -158,31 +162,35 @@
 	if(physics_flags & MPHYSICS_PAUSED)
 		return
 
-	// this component was designed to tick every 1/20 seconds, so we have to always account for that
+	//this component was designed to tick every 1/20 seconds, so we have to always account for that
 	var/tick_amount = 20 * seconds_per_tick
 	//this code basically only makes sense if we only move at most a single tile per tick, it is absolutely fucked otherwise
 	while(tick_amount > 0)
 		tick_amount--
+
+		//we need to know if we have gravity right now to apply friction and such, yeah
+		var/has_gravity = moving_atom.has_gravity()
+
 		moving_atom.pixel_x = round(moving_atom.pixel_x + (horizontal_velocity * sin(angle)), MOVABLE_PHYSICS_PRECISION)
 		moving_atom.pixel_y = round(moving_atom.pixel_y + (horizontal_velocity * cos(angle)), MOVABLE_PHYSICS_PRECISION)
 
-		moving_atom.pixel_z = round(max(z_floor, moving_atom.pixel_z + vertical_velocity), MOVABLE_PHYSICS_PRECISION)
+		//pixel_z has to be clamped because of no gravity, otherwise the atom will shoot out into infinity with no control whatsoever
+		moving_atom.pixel_z = round(clamp(moving_atom.pixel_z + vertical_velocity, z_floor, world.icon_size), MOVABLE_PHYSICS_PRECISION)
 
 		moving_atom.adjust_visual_angle(round(visual_angle_velocity, 1))
 
-		horizontal_velocity = max(0, horizontal_velocity - horizontal_friction)
-		// we are not on the floor, apply friction
-		if(moving_atom.pixel_z > z_floor)
-			vertical_velocity -= vertical_friction
-		// we are on the floor, try to bounce if we have any vertical velocity
-		else if(moving_atom.pixel_z <= z_floor && vertical_velocity)
-			z_floor_bounce(moving_atom)
-
-		// z_floor_bounce could have deleted us
-		if(QDELETED(src))
-			return
-
-		visual_angle_velocity = max(0, visual_angle_velocity - visual_angle_friction)
+		if(has_gravity)
+			visual_angle_velocity = max(0, visual_angle_velocity - visual_angle_friction)
+			horizontal_velocity = max(0, horizontal_velocity - horizontal_friction)
+			// we are not on the floor, apply friction
+			if(moving_atom.pixel_z > z_floor)
+				vertical_velocity -= vertical_friction
+			// we are on the floor, try to bounce if we have any vertical velocity
+			else if(moving_atom.pixel_z <= z_floor && vertical_velocity)
+				z_floor_bounce(moving_atom)
+				// z_floor_bounce could have deleted us
+				if(QDELETED(src))
+					return
 
 		var/move_direction = NONE
 		var/effective_pixel_x = moving_atom.pixel_x - moving_atom.base_pixel_x
@@ -271,15 +279,21 @@
 	moving_atom.pixel_z = round(z_floor, MOVABLE_PHYSICS_PRECISION)
 	if(bounce_spin_speed && !visual_angle_velocity && !visual_angle_friction)
 		moving_atom.SpinAnimation(speed = bounce_spin_speed, loops = max(0, bounce_spin_loops))
-	vertical_velocity = abs(vertical_velocity * vertical_conservation_of_momentum)
+	vertical_velocity = abs(vertical_velocity * (moving_atom.has_gravity() ? vertical_conservation_of_momentum : max(vertical_conservation_of_momentum, NO_GRAVITY_CONSERVATION_OF_MOMENTUM)))
 	if(bounce_callback)
 		bounce_callback.Invoke()
+
+/// We do not EVER want newtonian movement while handling movement ourselves, so block it!
+/datum/component/movable_physics/proc/on_newtonian_move(atom/movable/source, direction, start_delay)
+	SIGNAL_HANDLER
+
+	return COMPONENT_MOVABLE_NEWTONIAN_BLOCK
 
 /// Basically handles bumping on a solid object and ricocheting away according to a dose of Newton's third law
 /datum/component/movable_physics/proc/on_bump(atom/movable/source, atom/bumped_atom)
 	SIGNAL_HANDLER
 
-	horizontal_velocity = horizontal_velocity * horizontal_conservation_of_momentum
+	horizontal_velocity = horizontal_velocity * (source.has_gravity() ? horizontal_conservation_of_momentum : max(horizontal_conservation_of_momentum, NO_GRAVITY_CONSERVATION_OF_MOMENTUM))
 	var/face_direction = get_dir(bumped_atom, source)
 	var/face_angle = dir2angle(face_direction)
 	var/incidence = GET_ANGLE_OF_INCIDENCE(face_angle, angle + 180)
@@ -319,3 +333,5 @@
 		visual_angle_velocity = rand(1 * 100, 3 * 100) * 0.01, \
 		visual_angle_friction = 0.1, \
 	)
+
+#undef NO_GRAVITY_CONSERVATION_OF_MOMENTUM

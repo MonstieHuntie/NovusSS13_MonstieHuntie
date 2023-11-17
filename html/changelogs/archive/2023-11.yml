@@ -17,3 +17,23 @@
   - rscadd: Added hemorrhagic stroke as a brain trauma
   - balance: Blood brothers have gone through a pretty extensive overhaul
   - qol: COMMAND RADIO IS NAVY BLUE AS GOD INTENDED. FUCK YOU.
+2023-11-09:
+  NullDagaf:
+  - rscadd: adds the chicken race
+2023-11-11:
+  ChungusGamer666:
+  - rscadd: Blood brothers now can be a midround antag
+2023-11-12:
+  ChungusGamer666:
+  - bugfix: Fixed visual oddities with bodyparts
+2023-11-13:
+  ChungusGamer666:
+  - balance: A bunch of species traits are now tied to bodyparts or organs instead.
+      Most notably, augmenting yourself with a cyborg chest makes you immune to toxin
+      damage, and makes you have no blood.
+  - qol: Dried blood looks better now in general.
+  - qol: Failing organs are now visually desaturated and darker!
+  - qol: Gibbing looks better (by using movable physics)
+2023-11-17:
+  ChungusGamer666:
+  - rscadd: Hemispherectomies!

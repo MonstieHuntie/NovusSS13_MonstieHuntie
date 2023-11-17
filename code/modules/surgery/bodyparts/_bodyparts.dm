@@ -44,7 +44,7 @@
 	/// Are we a hand? if so, which one!
 	var/held_index = 0
 	/// A speed modifier we apply to the owner when attached, if any. Positive numbers make it move slower, negative numbers make it move faster.
-	var/speed_modifier = 0
+	var/speed_modifier = null
 
 	/// The type of husk for building an icon state when husked
 	var/husk_type = "humanoid"
@@ -263,6 +263,9 @@
 	if(locate(/datum/wound/burn) in wounds)
 		. += span_warning("The flesh on this limb appears badly cooked.")
 
+/obj/item/bodypart/setDir(newdir)
+	SHOULD_CALL_PARENT(FALSE)
+	return //always face south
 /**
  * Called when a bodypart is checked for injuries.
  * Returns the messages represeting the bodypart's injuries.
